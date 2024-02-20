@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Green Grocer</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+      integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Rubik+Doodle+Shadow&family=Work+Sans&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Work Sans", sans-serif;
+        background-color: rgba(206, 229, 251, 0.796);
+      }
+
+      .heading {
+        background-color: aquamarine;
+        text-align: center;
+        padding: 3rem 0;
+      }
+
+      .heading h1 {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: 5rem;
+      }
+
+      .heading p {
+        width: 50%;
+        margin: 1rem auto 2rem auto;
+        font-size: 1.75rem;
+      }
+
+      .tableContainer {
+        margin: 2rem auto;
+        text-align: center;
+        overflow-x: auto;
+      }
+
+      .tableContainer h2,
+      .addContainer h2 {
+        font-size: 3rem;
+        font-family: "Bebas Neue", sans-serif;
+        text-align: center;
+      }
+
+      #productTable table {
+        margin: 1rem auto 0 auto;
+        text-align: center;
+        font-size: 1.5rem;
+        width: 100%;
+      }
+
+      table th {
+        padding: 1rem;
+        font-size: 1.75rem;
+      }
+
+      .btnContainer {
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .btnContainer button,
+      .formContainer button {
+        border: none;
+        background-color: aquamarine;
+        padding: 1rem 2rem;
+        font-size: 1.5rem;
+        border-radius: 1rem;
+        font-weight: bold;
+        margin: 0 auto;
+        text-align: center;
+      }
+
+      .btnContainer button:hover,
+      .addContainer button:hover {
+        background-color: rgb(63, 248, 186);
+        cursor: pointer;
+      }
+
+      .addContainer {
+        margin: 4rem auto;
+      }
+
+      .formContainer {
+        width: 30%;
+        margin: 0 auto;
+      }
+
+      .formContainer label {
+        display: block;
+        font-size: 1.5rem;
+        margin-bottom: 0.25rem;
+      }
+
+      .formContainer input {
+        width: 100%;
+        height: 2rem;
+        margin-bottom: 1.5rem;
+      }
+
+      .btn-container {
+        text-align: center;
+        width: 100%;
+      }
+
+      .categoryContainer {
+        margin: 0 auto;
+        width: 100%;
+        text-align: center;
+      }
+
+      .category {
+        text-transform: uppercase;
+        font-size: 1.25rem;
+        font-weight: bold;
+        text-align: center;
+        margin: 1rem auto;
+        border: 4px solid aquamarine;
+        display: inline-block;
+        padding: 1rem;
+      }
+
+      .button-container button i {
+        font-size: 2rem;
+      }
+
+      .button-container {
+        margin-top: 1rem;
+      }
+
+      .button-container button {
+        background-color: rgba(82, 171, 255, 0.796);
+        border: none;
+        padding: 0.5rem 2rem;
+      }
+
+      .button-container button:hover {
+        background-color: rgba(206, 229, 251, 0.796);
+        cursor: pointer;
+      }
+
+      .group {
+        margin-top: 2rem;
+        font-size: 2rem;
+      }
+
+      @media only screen and (max-width: 768px) {
+        .heading p {
+          width: 80%;
+        }
+
+        .formContainer {
+          width: 100%;
+        }
+        .tableContainer {
+          overflow-x: scroll;
+        }
+      }
+
+      @media only screen and (max-width: 480px) {
+        .heading h1 {
+          font-size: 4rem;
+        }
+
+        .heading p {
+          width: 100%;
+        }
+
+        .formContainer {
+          width: 100%;
+        }
+
+        .category {
+          font-size: 1rem;
+        }
+
+        .button-container button {
+          padding: 0.5rem 1rem;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="heading">
+      <h1 id="mainHeading">Green Grocer</h1>
+
+      <p>
+        "Fresh Choices for a Greener Tomorrow – Your Local Source for Quality
+        Produce and Essentials at Green Grocer.
+      </p>
+    </div>
+
+    <div class="tableContainer">
+      <h2 class="subHeading">Product List</h2>
+      <div id="productTable"></div>
+    </div>
+
+    <div class="btnContainer">
+      <button onclick="downloadPDF()">Download Invoice</button>
+    </div>
+
+    <div class="addContainer">
+      <h2 class="subHeading">Add New Product</h2>
+      <div class="categoryContainer">
+        <p class="category">
+          Category ID: 1 - fruits | 2 - Vegetables | 3 - Dairy
+        </p>
+        <p class="category">
+          Supplier ID: 1 - Farm Fresh | 2 - Green Fields | 3 - Dairy Delight
+        </p>
+      </div>
+
+      <div class="formContainer">
+        <label for="product_id"> Product ID: </label>
+        <input type="text" id="product_id" />
+        <label for="productName"> Product Name: </label>
+        <input type="text" id="productName" />
+
+        <label for="price"> Price: </label><input type="number" id="price" />
+        <br />
+        <label for="categoryId"> Category ID: </label
+        ><input type="number" id="categoryId" />
+
+        <label for="supplierId"> Supplier ID: </label
+        ><input type="number" id="supplierId" />
+        <br />
+        <div class="btn-container">
+          <button onclick="addProduct()">Add Product</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="addContainer">
+      <div class="formContainer">
+        <h2 class="subHeading">Update Product</h2>
+        <label>
+          Product ID:
+          <input type="number" id="updateProductId" />
+        </label>
+        <br />
+        <label>
+          Updated Product Name:
+          <input type="text" id="updatedProductName" />
+        </label>
+        <br />
+        <label>
+          Updated Price:
+          <input type="number" id="updatedPrice" />
+        </label>
+        <br />
+        <label>
+          Updated Category ID:
+          <input type="number" id="updatedCategoryId" />
+        </label>
+        <br />
+        <label>
+          Updated Supplier ID:
+          <input type="number" id="updatedSupplierId" />
+        </label>
+        <br />
+        <div class="btn-container">
+          <button onclick="updateProduct()">Update Product</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="addContainer">
+      <div class="formContainer">
+        <h2 class="subHeading">Delete Product</h2>
+        <label>
+          Product ID:
+          <input type="number" id="deleteProductId" />
+        </label>
+        <br />
+        <div class="btn-container">
+          <button onclick="deleteProduct()">Delete Product</button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const baseURL = "http://localhost:3000";
+
+      function fetchProducts() {
+        fetch(`${baseURL}/products`)
+          .then((response) => response.json())
+          .then((products) => {
+            const productTable = document.getElementById("productTable");
+            productTable.innerHTML = "";
+
+            // Create the table
+            const table = document.createElement("table");
+            table.border = "1";
+
+            // Create the table header
+            const headerRow = document.createElement("tr");
+            headerRow.innerHTML =
+              "<th>Product ID</th><th>Product Name</th><th>Price</th><th>Category ID</th><th>Supplier ID</th>";
+            table.appendChild(headerRow);
+
+            // Populate the table with product data
+            products.forEach((product) => {
+              const row = document.createElement("tr");
+              row.innerHTML = `<td>${product.product_id}</td><td>${product.product_name}</td><td>$${product.price}</td><td>${product.category_id}</td><td>${product.supplier_id}</td>`;
+              table.appendChild(row);
+            });
+
+            productTable.appendChild(table);
+          })
+          .catch((error) => console.error("Error fetching products:", error));
+      }
+
+      function addProduct() {
+        const product_id = document.getElementById("product_id").value;
+        const productName = document.getElementById("productName").value;
+        const price = document.getElementById("price").value;
+        const categoryId = document.getElementById("categoryId").value;
+        const supplierId = document.getElementById("supplierId").value;
+
+        fetch(`${baseURL}/products`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            product_id: product_id,
+            product_name: productName,
+            price: price,
+            category_id: categoryId,
+            supplier_id: supplierId,
+          }),
+        })
+          .then(() => {
+            fetchProducts();
+          })
+          .catch((error) => console.error("Error adding product:", error));
+      }
+
+      function updateProduct() {
+        const productId = document.getElementById("updateProductId").value;
+        const updatedProductName =
+          document.getElementById("updatedProductName").value;
+        const updatedPrice = document.getElementById("updatedPrice").value;
+        const updatedCategoryId =
+          document.getElementById("updatedCategoryId").value;
+        const updatedSupplierId =
+          document.getElementById("updatedSupplierId").value;
+
+        fetch(`${baseURL}/products/${productId}`, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            product_name: updatedProductName,
+            price: updatedPrice,
+            category_id: updatedCategoryId,
+            supplier_id: updatedSupplierId,
+          }),
+        })
+          .then(() => {
+            fetchProducts();
+          })
+          .catch((error) => console.error("Error updating product:", error));
+      }
+
+      function deleteProduct() {
+        const productId = document.getElementById("deleteProductId").value;
+
+        fetch(`${baseURL}/products/${productId}`, {
+          method: "DELETE",
+        })
+          .then(() => {
+            fetchProducts();
+          })
+          .catch((error) => console.error("Error deleting product:", error));
+      }
+
+      function downloadPDF() {
+        // Use fetch to call the PDF generation endpoint
+        fetch("http://localhost:3000/download-pdf")
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Failed to generate PDF");
+            }
+            return response.blob();
+          })
+          .then((blob) => {
+            // Create a Blob URL for the PDF blob
+            const blobUrl = URL.createObjectURL(blob);
+
+            // Create an anchor element and trigger the download
+            const a = document.createElement("a");
+            a.href = blobUrl;
+            a.download = "Invoice.pdf";
+            a.click();
+
+            // Clean up: revoke the Blob URL
+            URL.revokeObjectURL(blobUrl);
+          })
+          .catch((error) => {
+            console.error("Error downloading PDF:", error);
+          });
+      }
+
+      fetchProducts();
+    </script>
+  </body>
+</html>
